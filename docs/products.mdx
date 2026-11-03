@@ -1,0 +1,34 @@
+---
+title: '商品列表 API'
+description: '查询演示商品列表及其状态、价格。'
+---
+
+本接口仅用于本地演示，所有商品均为虚构数据。
+
+## 查询商品
+
+`GET /products`
+
+本地地址为 `http://127.0.0.1:8000`，不需要身份验证。
+当前版本不支持查询参数，默认返回全部 8 条商品，包含所有状态。
+
+```bash
+curl 'http://127.0.0.1:8000/products'
+```
+
+## 响应字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| data | array | 商品列表 |
+| data[].id | string | 商品唯一标识 |
+| data[].name | string | 商品名称 |
+| data[].status | string | active（在售）、draft（草稿）、archived（归档） |
+| data[].price_cents | integer | 价格，单位为分，例如 2900 表示 29 元 |
+| data[].currency | string | 币种，本演示为 CNY |
+| total | integer | 本次响应中的商品数量 |
+
+## 错误响应
+
+- `400`：传入了不支持的查询参数，返回 `invalid_query` 和错误说明 `message`。
+- `404`：请求了不存在的路径，返回 `not_found`。
