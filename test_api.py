@@ -43,6 +43,25 @@ class ProductAPITest(unittest.TestCase):
         self.assertEqual(status, 400)
         self.assertEqual(body["error"], "invalid_query")
 
+    def test_filter_by_status(self):
+        for value, expected_count in [("active", 4), ("draft", 2), ("archived", 2)]:
+            with self.subTest(status=value):
+                status, body = self.get("/products?status=" + value)
+                self.assertEqual(status, 200)
+                self.assertEqual(body["total"], expected_count)
+                self.assertEqual(len(body["data"]), expected_count)
+                self.assertTrue(all(item["status"] == value for item in body["data"]))
+        # A filtered request must not alter the fixture used by later requests.
+        self.assertEqual(self.get("/products")[1]["total"], 8)
+
+    def test_invalid_status(self):
+        for query in ["status=invalid", "status=", "status=ACTIVE", "status=active&status=draft"]:
+            with self.subTest(query=query):
+                status, body = self.get("/products?" + query)
+                self.assertEqual(status, 400)
+                self.assertEqual(body["error"], "invalid_query")
+                self.assertIn("active, draft, archived", body["message"])
+
     def test_unknown_path(self):
         status, body = self.get("/missing")
         self.assertEqual(status, 404)
