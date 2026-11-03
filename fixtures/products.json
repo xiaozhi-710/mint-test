@@ -1,0 +1,10 @@
+[
+  {"id": "prod_001", "name": "云朵笔记本", "status": "active", "price_cents": 2900, "currency": "CNY"},
+  {"id": "prod_002", "name": "森林马克杯", "status": "active", "price_cents": 5900, "currency": "CNY"},
+  {"id": "prod_003", "name": "星空帆布包", "status": "archived", "price_cents": 7900, "currency": "CNY"},
+  {"id": "prod_004", "name": "海风书签", "status": "draft", "price_cents": 1200, "currency": "CNY"},
+  {"id": "prod_005", "name": "晨光台灯", "status": "active", "price_cents": 12900, "currency": "CNY"},
+  {"id": "prod_006", "name": "山间水杯", "status": "archived", "price_cents": 8900, "currency": "CNY"},
+  {"id": "prod_007", "name": "月光贴纸", "status": "draft", "price_cents": 900, "currency": "CNY"},
+  {"id": "prod_008", "name": "晴空收纳盒", "status": "active", "price_cents": 3900, "currency": "CNY"}
+]
