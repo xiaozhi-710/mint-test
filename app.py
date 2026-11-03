@@ -12,14 +12,22 @@ PRODUCTS = json.loads(
 
 
 def list_products(query):
-    if set(query) - {"status"}:
-        raise ValueError("Only the status query parameter is supported")
+    if set(query) - {"status", "limit"}:
+        raise ValueError("Only status and limit query parameters are supported")
     statuses = query.get("status")
     products = PRODUCTS
     if statuses is not None:
         if len(statuses) != 1 or statuses[0] not in {"active", "draft", "archived"}:
             raise ValueError("status must be exactly one of: active, draft, archived")
         products = [product for product in PRODUCTS if product["status"] == statuses[0]]
+    limits = query.get("limit")
+    if limits is not None:
+        if len(limits) != 1 or not limits[0].isascii() or not limits[0].isdigit():
+            raise ValueError("limit must be one integer from 1 to 100")
+        limit = int(limits[0])
+        if not 1 <= limit <= 100:
+            raise ValueError("limit must be one integer from 1 to 100")
+        products = products[:limit]
     return {"data": products, "total": len(products)}
 
 
