@@ -12,14 +12,23 @@ PRODUCTS = json.loads(
 
 
 def list_products(query):
-    if set(query) - {"status", "limit"}:
-        raise ValueError("Only status and limit query parameters are supported")
+    if set(query) - {"status", "limit", "sort"}:
+        raise ValueError("Only status, limit and sort query parameters are supported")
     statuses = query.get("status")
     products = PRODUCTS
     if statuses is not None:
         if len(statuses) != 1 or statuses[0] not in {"active", "draft", "archived"}:
             raise ValueError("status must be exactly one of: active, draft, archived")
         products = [product for product in PRODUCTS if product["status"] == statuses[0]]
+    sorts = query.get("sort")
+    if sorts is not None:
+        if len(sorts) != 1 or sorts[0] not in {"price_asc", "price_desc"}:
+            raise ValueError("sort must be exactly one of: price_asc, price_desc")
+        products = sorted(
+            products,
+            key=lambda product: product["price_cents"],
+            reverse=sorts[0] == "price_desc",
+        )
     limits = query.get("limit")
     if limits is not None:
         if len(limits) != 1 or not limits[0].isascii() or not limits[0].isdigit():
