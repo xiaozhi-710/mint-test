@@ -12,9 +12,15 @@ PRODUCTS = json.loads(
 
 
 def list_products(query):
-    if query:
-        raise ValueError("Query parameters are not supported")
-    return {"data": PRODUCTS, "total": len(PRODUCTS)}
+    if set(query) - {"status"}:
+        raise ValueError("Only the status query parameter is supported")
+    statuses = query.get("status")
+    products = PRODUCTS
+    if statuses is not None:
+        if len(statuses) != 1 or statuses[0] not in {"active", "draft", "archived"}:
+            raise ValueError("status must be exactly one of: active, draft, archived")
+        products = [product for product in PRODUCTS if product["status"] == statuses[0]]
+    return {"data": products, "total": len(products)}
 
 
 class ProductHandler(BaseHTTPRequestHandler):
