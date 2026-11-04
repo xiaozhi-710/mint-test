@@ -22,12 +22,12 @@ def list_products(query):
         products = [product for product in PRODUCTS if product["status"] == statuses[0]]
     sorts = query.get("sort")
     if sorts is not None:
-        if len(sorts) != 1 or sorts[0] not in {"price_asc", "price_desc", "name_asc"}:
-            raise ValueError("sort must be exactly one of: price_asc, price_desc, name_asc")
+        if len(sorts) != 1 or sorts[0] not in {"price_asc", "price_desc", "name_asc", "name_desc"}:
+            raise ValueError("sort must be exactly one of: price_asc, price_desc, name_asc, name_desc")
         products = sorted(
             products,
-            key=lambda product: product["name"] if sorts[0] == "name_asc" else product["price_cents"],
-            reverse=sorts[0] == "price_desc",
+            key=lambda product: product["name"] if sorts[0] in {"name_asc", "name_desc"} else product["price_cents"],
+            reverse=sorts[0] in {"price_desc", "name_desc"},
         )
     limits = query.get("limit")
     if limits is not None:
