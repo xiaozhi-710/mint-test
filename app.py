@@ -32,10 +32,10 @@ def list_products(query):
     limits = query.get("limit")
     if limits is not None:
         if len(limits) != 1 or not limits[0].isascii() or not limits[0].isdigit():
-            raise ValueError("limit must be one integer from 1 to 100")
+            raise ValueError("limit must be one integer from 1 to 200")
         limit = int(limits[0])
-        if not 1 <= limit <= 100:
-            raise ValueError("limit must be one integer from 1 to 100")
+        if not 1 <= limit <= 200:
+            raise ValueError("limit must be one integer from 1 to 200")
         products = products[:limit]
     return {"data": products, "total": len(products)}
 
